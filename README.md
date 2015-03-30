@@ -1,6 +1,6 @@
-# stock.vim
+# finance.vim
 
-Simple plugin for checking your stock in Vim.
+Simple plugin for checking your stock in Vim (Yahoo Finance).
 
 # Requirements
 
@@ -8,11 +8,11 @@ Simple plugin for checking your stock in Vim.
 
 # Usage
 
-    :Stock 00005:HK
-    :Stock 00005:HK 02800:HK
+    :Finance 0005.HK
+    :Finance 0005.HK GOOG
 
     // Optional: add into .vimrc for checking automatically
-    autocmd CursorHold * call Stock()
-    let g:stock_watchlist = ['00005:HK', '02800:HK']
+    autocmd CursorHold * call Finane()
+    let g:stock_watchlist = ['0005.HK', 'GOOG']
 
 [webapi-vim]: https://github.com/mattn/webapi-vim
