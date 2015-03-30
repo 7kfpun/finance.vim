@@ -4,10 +4,10 @@
 scriptencoding utf-8
 
 
-" if (exists("g:loaded_finance") && g:loaded_finance) || &cp
-"     finish
-" endif
-" let g:loaded_finance = 1
+if (exists("g:loaded_finance") && g:loaded_finance) || &cp
+    finish
+endif
+let g:loaded_finance = 1
 
 
 function! s:check_defined(variable, default)
@@ -41,11 +41,11 @@ function! Finance(...)
         if type(objs) == 3  " if it is a list
             let results = []
             for obj in objs
-                let result = obj['symbol'] . ': ' . obj['LastTradePriceOnly'] . ' (' . obj['Change'] . '%)'
+                let result = obj['symbol'] . ': ' . obj['LastTradePriceOnly'] . ' (' . obj['Change'] . ')'
                 call add(results, result)
             endfor
         else
-            return objs['symbol'] . ': ' . objs['LastTradePriceOnly'] . ' (' . objs['Change'] . '%)'
+            return objs['symbol'] . ': ' . objs['LastTradePriceOnly'] . ' (' . objs['Change'] . ')'
         endif
     catch
         echoerr 'Request error.'
