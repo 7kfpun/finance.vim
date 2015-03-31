@@ -17,7 +17,7 @@ function! s:check_defined(variable, default)
 endfunction
 
 
-call s:check_defined('g:finance_watchlist', ['00005:HK'])
+call s:check_defined('g:finance_watchlist', ['0005.HK', 'GOOG'])
 
 
 silent! call webapi#json#decode('{}')
@@ -44,14 +44,14 @@ function! Finance(...)
                 let result = obj['symbol'] . ': ' . obj['LastTradePriceOnly'] . ' (' . obj['Change'] . ')'
                 call add(results, result)
             endfor
+            echo join(results, ' | ')
         else
-            return objs['symbol'] . ': ' . objs['LastTradePriceOnly'] . ' (' . objs['Change'] . ')'
+            echo objs['symbol'] . ': ' . objs['LastTradePriceOnly'] . ' (' . objs['Change'] . ')'
         endif
     catch
         echoerr 'Request error.'
     endtry
-    return join(results, ' | ')
 endfunction
 
 
-command! -nargs=* Finance echo Finance(<f-args>)
+command! -nargs=* Finance call Finance(<f-args>)
