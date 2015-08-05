@@ -9,13 +9,12 @@ Simple plugin for checking your stock in Vim (Yahoo Finance).
 # Usage
 
     let g:finance_watchlist = ['0005.HK', 'GOOG']
+    let g:finance_format' = '{symbol}: {LastTradePriceOnly} ({Change})'
+    let g:finance_separator' = "\n"
 
     :Finance
 
     :Finance 0005.HK
     :Finance 0005.HK GOOG
-
-    // Optional: add into .vimrc for checking automatically
-    autocmd FocusLost * call Finance()
 
 [webapi-vim]: https://github.com/mattn/webapi-vim
