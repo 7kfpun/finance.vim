@@ -37,25 +37,27 @@ function! Finance(...)
     let joined_symbols = join(symbols, "%27,%27")
 
     try
-        let response = webapi#http#get('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%27' . joined_symbols . '%27)&diagnostics=true&env=store://datatables.org/alltableswithkeys&format=json')
+        let response = webapi#http#get('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%27' . joined_symbols . '%27)&diagnostics=true&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json')
         let objs = webapi#json#decode(response.content)['query']['results']['quote']
         if type(objs) == 3  " if it is a list
-            let results = []
-            for obj in objs
-                let result = g:finance_format
-                while matchstr(result,'{[^}]*}') != ""
-                    let exp = matchstr(result,'{[^}]*}')
-                    if exp != ""
-                        let key = substitute(exp, '[{}]', '', 'g')
-                        let result = substitute(result, exp, obj[key], "")
-                    endif
-                endwhile
-                call add(results, substitute(result, '[{}]', '', 'g'))
-            endfor
-            echo join(results, ' | ')
+            let quotes = objs
         else
-            echo objs['symbol'] . ': ' . objs['LastTradePriceOnly'] . ' (' . objs['Change'] . ')'
+            let quotes = [objs]
         endif
+
+        let results = []
+        for quote in quotes
+            let result = g:finance_format
+            while matchstr(result,'{[^}]*}') != ""
+                let exp = matchstr(result,'{[^}]*}')
+                if exp != ""
+                    let key = substitute(exp, '[{}]', '', 'g')
+                    let result = substitute(result, exp, quote[key], "")
+                endif
+            endwhile
+            call add(results, substitute(result, '[{}]', '', 'g'))
+        endfor
+        echo join(results, ' | ')
     catch
         echoerr 'Request error: ' . v:exception
     endtry
