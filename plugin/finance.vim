@@ -18,6 +18,7 @@ endfunction
 
 
 call s:check_defined('g:finance_watchlist', ['0005.HK', 'GOOG'])
+call s:check_defined('g:finance_format', '{symbol}: {LastTradePriceOnly} ({Change})')
 
 
 silent! call webapi#json#decode('{}')
@@ -41,15 +42,22 @@ function! Finance(...)
         if type(objs) == 3  " if it is a list
             let results = []
             for obj in objs
-                let result = obj['symbol'] . ': ' . obj['LastTradePriceOnly'] . ' (' . obj['Change'] . ')'
-                call add(results, result)
+                let result = g:finance_format
+                while matchstr(result,'{[^}]*}') != ""
+                    let exp = matchstr(result,'{[^}]*}')
+                    if exp != ""
+                        let key = substitute(exp, '[{}]', '', 'g')
+                        let result = substitute(result, exp, obj[key], "")
+                    endif
+                endwhile
+                call add(results, substitute(result, '[{}]', '', 'g'))
             endfor
             echo join(results, ' | ')
         else
             echo objs['symbol'] . ': ' . objs['LastTradePriceOnly'] . ' (' . objs['Change'] . ')'
         endif
     catch
-        echoerr 'Request error.'
+        echoerr 'Request error: ' . v:exception
     endtry
 endfunction
 
