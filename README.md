@@ -1,23 +1,38 @@
-# finance.vim
+## finance.vim
 
 Simple plugin for checking your stock in Vim (Yahoo Finance).
 
-# Requirements
+![Screenshot](snapshot.png)
+
+
+## Requirements
 
 - [webapi-vim][]
 
-# Usage
-
-    let g:finance_watchlist = ['0005.HK', 'GOOG']
-    let g:finance_format' = '{symbol}: {LastTradePriceOnly} ({Change})'
-    let g:finance_separator' = "\n"
+## Usage
 
     :Finance
-
     :Finance 0005.HK
     :Finance 0005.HK GOOG
 
-# QuoteProperty
+## Install
+
+*  [Pathogen](https://github.com/tpope/vim-pathogen)
+  * `git clone https://github.com/7kfpun/finance.vim.git ~/.vim/bundle/finance.vim`
+*  [vim-plug](https://github.com/junegunn/vim-plug)
+  * `Plug '7kfpun/finance.vim'`
+*  [NeoBundle](https://github.com/Shougo/neobundle.vim)
+  * `NeoBundle '7kfpun/finance.vim'`
+*  [Vundle](https://github.com/gmarik/vundle)
+  * `Plugin '7kfpun/finance.vim'`
+
+## Settings
+
+    let g:finance_watchlist = ['0005.HK', 'GOOG']
+    let g:finance_format = '{symbol}: {LastTradePriceOnly} ({Change})'
+    let g:finance_separator = "\n"
+
+## QuoteProperty
 
     AfterHoursChangeRealtime
     AnnualizedGain
