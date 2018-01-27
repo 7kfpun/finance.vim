@@ -1,4 +1,4 @@
-" finance.vim - Check US stocks in vim
+" finance.vim - Check Stocks and Exchange Rates in Vim
 " Maintainer: kf <7kfpun@gmail.com>
 
 scriptencoding utf-8
@@ -37,12 +37,11 @@ function! finance#format(format_string, object)
         let exp = matchstr(result, '{[^}]*}')
         if exp != ''
             let key = substitute(exp, '[{}]', '', 'g')
-            let value = get(a:object, key, '')
-            if type(value) != 1
-                let value = string(value)
+            if type(get(a:object, key, '')) != 1
+                let result = substitute(result, exp, string(get(a:object, key, '')), '')
+            else
+                let result = substitute(result, exp, get(a:object, key, ''), '')
             endif
-
-            let result = substitute(result, exp, value, '')
         endif
     endwhile
     return result

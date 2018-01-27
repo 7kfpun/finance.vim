@@ -1,6 +1,6 @@
 ## finance.vim ![travis-ci](https://travis-ci.org/7kfpun/finance.vim.svg?branch=master)
 
-Checking US Stocks and Exchange Rates in Vim (Alpha Vantage and 126).
+Check Stocks and Exchange Rates in Vim (Alpha Vantage and 126).
 
 ![Screenshot](screenshot.png)
 
@@ -28,13 +28,28 @@ Checking US Stocks and Exchange Rates in Vim (Alpha Vantage and 126).
 ## Install
 
 *  [Pathogen](https://github.com/tpope/vim-pathogen)
-  * `git clone https://github.com/7kfpun/finance.vim.git ~/.vim/bundle/finance.vim`
+    ```
+    git clone https://github.com/7kfpun/finance.vim.git ~/.vim/bundle/finance.vim
+    git clone https://github.com/mattn/webapi-vim.git ~/.vim/bundle/webapi-vim
+    ```
+
 *  [vim-plug](https://github.com/junegunn/vim-plug)
-  * `Plug '7kfpun/finance.vim'`
+    ```
+    Plug '7kfpun/finance.vim'
+    Plug 'mattn/webapi-vim'
+    ```
+
 *  [NeoBundle](https://github.com/Shougo/neobundle.vim)
-  * `NeoBundle '7kfpun/finance.vim'`
-*  [Vundle](https://github.com/gmarik/vundle)
-  * `Plugin '7kfpun/finance.vim'`
+    ```
+    NeoBundle '7kfpun/finance.vim'
+    NeoBundle 'mattn/webapi-vim'
+    ```
+
+* [Vundle](https://github.com/gmarik/vundle)
+    ```
+    Plugin '7kfpun/finance.vim'
+    Plugin 'mattn/webapi-vim'
+    ```
 
 ## Settings
 
@@ -101,3 +116,8 @@ Checking US Stocks and Exchange Rates in Vim (Alpha Vantage and 126).
     5. Exchange Rate
     6. Last Refreshed
     7. Time Zone
+
+
+## License
+
+Released under the [MIT License](http://opensource.org/licenses/MIT).
