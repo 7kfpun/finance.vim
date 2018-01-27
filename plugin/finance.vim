@@ -94,21 +94,16 @@ function! FinanceCn(...)
         let response = webapi#http#get(url)
         let content = substitute(response.content, '_ntes_quote_callback(', '', 'g')
         let content = substitute(content, ');', '', 'g')
-        let content = webapi#json#decode(content)
+        let quotes = webapi#json#decode(content)
     catch
         echoerr 'Request error: ' . v:exception
         return
     endtry
 
-    if type(content) != 4  " dict type
-        echoerr 'Error Request'
-        return
-    endif
-
     let results = []
     for symbol in symbols
-        if has_key(content, symbol)
-            let result = finance#format(g:finance_cn_format, content[symbol])
+        if has_key(quotes, symbol)
+            let result = finance#format(g:finance_cn_format, quotes[symbol])
             call add(results, result)
         endif
     endfor
