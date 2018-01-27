@@ -19,9 +19,10 @@ endfunction
 
 call s:check_defined('g:finance_watchlist', ['AAPL', 'GOOG', 'MSFT', 'AMZN', 'FB'])
 call s:check_defined('g:finance_format', '{1. symbol}: {2. price} ({3. volume})')
+call s:check_defined('g:finance_cn_format', '{name}: {price} ({updown}/{percent}%)')
 call s:check_defined('g:finance_separator', "\n")  " have to be double quotes
 
-call s:check_defined('g:exchange_currencies', ['BTC', 'USD'])
+call s:check_defined('g:exchange_currency', ['BTC', 'USD'])
 call s:check_defined('g:exchange_format', '1 {1. From_Currency Code} = {5. Exchange Rate} {3. To_Currency Code}')
 
 silent! call webapi#json#decode('{}')
@@ -30,6 +31,22 @@ if !exists('*webapi#json#decode')
     finish
 endif
 
+function! finance#format(format_string, object)
+    let result = a:format_string
+    while matchstr(result, '{[^}]*}') != ''
+        let exp = matchstr(result, '{[^}]*}')
+        if exp != ''
+            let key = substitute(exp, '[{}]', '', 'g')
+            let value = get(a:object, key, '')
+            if type(value) != 1
+                let value = string(value)
+            endif
+
+            let result = substitute(result, exp, value, '')
+        endif
+    endwhile
+    return result
+endfunction
 
 function! Finance(...)
     if len(a:000)
@@ -58,19 +75,45 @@ function! Finance(...)
 
     let results = []
     for quote in quotes
-        let result = g:finance_format
-        while matchstr(result, '{[^}]*}') != ''
-            let exp = matchstr(result, '{[^}]*}')
-            if exp != ''
-                let key = substitute(exp, '[{}]', '', 'g')
-                let result = substitute(result, exp, get(quote, key, ''), '')
-            endif
-        endwhile
-        call add(results, substitute(result, '[{}]', '', 'g'))
+        let result = finance#format(g:finance_format, quote)
+        call add(results, result)
     endfor
-    echo join(results, g:finance_separator)
+    return join(results, g:finance_separator)
 endfunction
 
+function! FinanceCn(...)
+    if len(a:000)
+        let symbols = a:000
+    else
+        let symbols = g:finance_watchlist
+    endif
+    let joined_symbols = join(symbols, ',')
+
+    try
+        let url = 'http://api.money.126.net/data/feed/' . joined_symbols
+        let response = webapi#http#get(url)
+        let content = substitute(response.content, '_ntes_quote_callback(', '', 'g')
+        let content = substitute(content, ');', '', 'g')
+        let content = webapi#json#decode(content)
+    catch
+        echoerr 'Request error: ' . v:exception
+        return
+    endtry
+
+    if type(content) != 4  " dict type
+        echoerr 'Error Request'
+        return
+    endif
+
+    let results = []
+    for symbol in symbols
+        if has_key(content, symbol)
+            let result = finance#format(g:finance_cn_format, content[symbol])
+            call add(results, result)
+        endif
+    endfor
+    return join(results, g:finance_separator)
+endfunction
 
 function! Exchange(...)
     if len(a:000)
@@ -102,19 +145,9 @@ function! Exchange(...)
         return
     endif
 
-    let quote = content['Realtime Currency Exchange Rate']
-
-    let result = g:exchange_format
-    while matchstr(result, '{[^}]*}') != ''
-        let exp = matchstr(result, '{[^}]*}')
-        if exp != ''
-            let key = substitute(exp, '[{}]', '', 'g')
-            let result = substitute(result, exp, get(quote, key, ''), '')
-        endif
-    endwhile
-    echo result
+    return finance#format(g:exchange_format, content['Realtime Currency Exchange Rate'])
 endfunction
 
-
-command! -nargs=* Finance call Finance(<f-args>)
-command! -nargs=* Exchange call Exchange(<f-args>)
+command! -nargs=* Finance echo Finance(<f-args>)
+command! -nargs=* FinanceCn echo FinanceCn(<f-args>)
+command! -nargs=* Exchange echo Exchange(<f-args>)

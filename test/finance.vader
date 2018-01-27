@@ -1,0 +1,41 @@
+Execute (Initialize vars):
+  Save g:finance_watchlist g:finance_format g:finance_cn_format g:finance_separator
+  Save g:exchange_currencies
+
+Execute (s:format):
+  AssertEqual '1', finance#format('{a}', {'a': 1})
+  AssertEqual '1 2 3', finance#format('{a a} {b b} {c c}', {'a a': 1, 'b b': 2, 'c c': 3})
+  AssertEqual  '1 BTC = 71224.83073710 CNY', finance#format('1 {1. From_Currency Code} = {5. Exchange Rate} {3. To_Currency Code}', {"1. From_Currency Code": "BTC", "2. From_Currency Name": "Bitcoin", "3. To_Currency Code": "CNY", "4. To_Currency Name": "Chinese Yuan", "5. Exchange Rate": "71224.83073710", "6. Last Refreshed": "2018-01-27 06:14:32", "7. Time Zone": "UTC"})
+
+Execute (Finance):
+  Assert Finance('NFLX') =~ 'NFLX'
+
+  let g:finance_watchlist = ['AAPL', 'GOOG', 'MSFT', 'AMZN', 'FB']
+  let g:finance_format = '{1. symbol}'
+  let g:finance_separator = "\n"
+
+  AssertEqual 'NFLX', Finance('NFLX')
+  AssertEqual "AAPL\nGOOG\nMSFT\nAMZN\nFB", Finance()
+
+  let g:finance_separator = '|'
+  AssertEqual 'AAPL|GOOG|MSFT|AMZN|FB', Finance()
+
+Execute (FinanceCn):
+  Assert FinanceCn('hkHSI') =~ '恒生指数'
+  Assert FinanceCn('hk00005') =~ '汇丰控股'
+  Assert FinanceCn('1000001') =~ '平安银行'
+  Assert FinanceCn('US_GOOG', 'US_FB') =~ '谷歌'
+  Assert FinanceCn('US_GOOG', 'US_FB') =~ 'Facebook'
+
+Execute (Exchange):
+  let g:exchange_currencies = ['BTC', 'DOGE']
+  Assert Exchange() =~ 'BTC'
+  Assert Exchange() =~ 'DOGE'
+
+  Assert Exchange('EUR', 'HKD') =~ 'EUR'
+  Assert Exchange('EUR', 'HKD') =~ 'HKD'
+
+  AssertEqual '1 HKD = 1.00000000 HKD', Exchange('HKD', 'HKD')
+
+Execute (Cleanup):
+  Restore

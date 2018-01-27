@@ -1,6 +1,6 @@
-## finance.vim
+## finance.vim ![travis-ci](https://travis-ci.org/7kfpun/finance.vim.svg?branch=master)
 
-Checking US Stocks and Exchange Rates in Vim (Alpha Vantage).
+Checking US Stocks and Exchange Rates in Vim (Alpha Vantage and 126).
 
 ![Screenshot](screenshot.png)
 
@@ -10,9 +10,15 @@ Checking US Stocks and Exchange Rates in Vim (Alpha Vantage).
 
 ## Usage
 
+    " For US Stocks only
     :Finance
     :Finance GOOG
     :Finance FB GOOG
+
+    :FinanceCn 1000001  " For Shenzhen Stocks
+    :FinanceCn 0601939  " For Shanghai Stocks
+    :FinanceCn hkHSI hk00005  " For Hong Kong Stocks
+    :FinanceCn US_GOOG US_AAPL  " For US Stocks
 
     :Exchange
     :Exchange USD HKD
@@ -34,19 +40,58 @@ Checking US Stocks and Exchange Rates in Vim (Alpha Vantage).
 
     let g:finance_watchlist = ['AAPL', 'GOOG', 'MSFT', 'AMZN', 'FB'])
     let g:finance_format = '{1. symbol}: {2. price} ({3. volume})')
+    let g:finance_cn_format', '{name}: {price} ({updown}/{percent}%)'
     let g:finance_separator = "\n"
 
     let g:exchange_currencies = ['BTC', 'USD']
     let g:exchange_format = '1 {1. From_Currency Code} = {5. Exchange Rate} {3. To_Currency Code}'
 
-
-## QuoteProperty
+## Formatting
 
     " Finance
     1. symbol
     2. price
     3. volume
     4. timestamp
+
+    " FinanceCn
+    code
+    percent
+    high
+    askvol3
+    askvol2
+    askvol5
+    askvol4
+    price
+    open
+    bid5
+    bid4
+    bid3
+    bid2
+    bid1
+    low
+    updown
+    type
+    bidvol1
+    status
+    bidvol3
+    bidvol2
+    symbol
+    update
+    bidvol5
+    bidvol4
+    volume
+    askvol1
+    ask5
+    ask4
+    ask1
+    name
+    ask3
+    ask2
+    arrow
+    time
+    yestclose
+    turnover
 
     " Exchange
     1. From_Currency Code
